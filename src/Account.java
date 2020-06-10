@@ -43,15 +43,15 @@ public class Account {
         this.funds = funds;
     }
 
+    public void withdraw(Double value)
+    {
+        this.funds -= value;
+    }
     public void deposit(Double value)
     {
         this.funds += value;
     }
 
-    public void withdraw(Double value)
-    {
-        this.funds -= value;
-    }
 
     @Override
     public String toString()

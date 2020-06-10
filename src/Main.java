@@ -8,24 +8,25 @@ public class Main {
         Scanner nameInput = new Scanner(System.in);
         Scanner valueInput = new Scanner(System.in);
         ArrayList<Account> accounts = new ArrayList<Account>();
-        boolean run = true;
+        boolean run1 = true;
         int option = 0;
 
-        while (run) {
+        while (run1) {
             System.out.println("--------------------------------------");
             System.out.println("Menu");
             System.out.println("1 - Abrir conta corrente");
             System.out.println("2 - Depositar");
             System.out.println("3 - Sacar");
-            System.out.println("1 - Consultar saldo");
-            System.out.println("1 - Contas com saldo zerado");
+            System.out.println("4 - Consultar saldo");
+            System.out.println("5 - Contas abertas");
+            System.out.println("6 - Contas com saldo zerado");
             System.out.println("7 - Sair");
+            System.out.println("--------------------------------------");
             option = valueInput.nextInt();
 
             if (option == 1 && accounts.size() < 10) {
-                boolean run2 = true;
-                while (run2) {
-
+                boolean run3 = true;
+                while (run3) {
                     System.out.println("Digite o seu nome: ");
                     String name = nameInput.nextLine();
                     System.out.println("Digite o número da agência");
@@ -37,53 +38,84 @@ public class Main {
                         Account user = new Account(agency, name);
                         accounts.add(user);
                         System.out.println("Conta criada com sucesso!");
-                        run2 = false;
+                        run3 = false;
                     } else {
                         System.out.println("Já existe uma conta com essa agência");
                         System.out.println("Utilize outra combinação!");
-                        run2 = false;
-                    }
-                }
-            }
-
-            if (option == 2) {
-                boolean run3 = true;
-                System.out.println("Informe o número da agência: ");
-                int agency = valueInput.nextInt();
-                while (run3) {
-                    boolean verify = verification(accounts, agency);
-                    if (verify) {
-                        System.out.println("Quanto deseja depositar: ");
-                        Double value = valueInput.nextDouble();
-                        for (Account user : accounts) {
-                            if (user.getAgency() == agency && value > 0) {
-                                user.setFunds(value);
-                                System.out.println("Valor depositado com sucesso!");
-                                run3 = false;
-                                break;
-                            } else {
-                                System.out.println("Não foi possível realizar a operação...");
-                                run3 = false;
-                                break;
-                            }
-                        }
-                    } else {
-                        System.out.println("Não foi possível realizar a operação");
                         run3 = false;
                     }
                 }
-
             }
+
+            if (2 == option) {
+                boolean run4 = true;
+                System.out.println("Informe o número da agência: ");
+                int agency = valueInput.nextInt();
+                while (run4) {
+                    boolean validation = haveAgency(accounts, agency);
+                    if (!validation) {
+                        System.out.println("Quanto deseja depositar: ");
+                        Double value = valueInput.nextDouble();
+                        String message = withdrawAndDeposit(accounts, option, value, agency);
+                        System.out.println(message);
+                        run4 = false;
+                    } else {
+                        System.out.println("Não foi possível realizar a operação");
+                        run4 = false;
+                    }
+                }
+            }
+
+            if (option == 3) {
+                boolean run5 = true;
+                System.out.println("Digite a sua agência: ");
+                int agency = valueInput.nextInt();
+                boolean validation = haveAgency(accounts, agency);
+
+                if (!validation) {
+                    System.out.println("Quanto deseja sacar: ");
+                    Double value = valueInput.nextDouble();
+                    String message = withdrawAndDeposit(accounts, option, value, agency);
+                    System.out.println(message);
+                } else {
+                    System.out.println("Não foi possível realizar a operação");
+                }
+            }
+
+            if (option == 4) {
+                System.out.println("Digite o número da sua agência: ");
+                int agency = valueInput.nextInt();
+
+                boolean validation = haveAgency(accounts, agency);
+                if (!validation) {
+                    for (Account user : accounts) {
+                        if (user.getAgency() == agency) {
+                            System.out.println("Seu saldo é " + user.getFunds());
+                        }
+                    }
+                } else {
+                    System.out.println("Não existe essa conta...");
+                }
+            }
+
             switch (option) {
+                case 6:
+                    for (Account user : accounts) {
+                        if (user.getFunds() == 0) {
+                            System.out.println(user);
+                        }
+                    }
+                    break;
+                case 5:
+                    System.out.println(accounts);
+                    break;
                 case 7:
-                    run = false;
-                    System.out.println(accounts + "\n");
+                    run1 = false;
                     System.out.println("Sessão encerrada...");
                     break;
             }
+
         }
-
-
     }
 
     public static boolean haveAgency(ArrayList<Account> accounts, int agency)
@@ -97,16 +129,32 @@ public class Main {
         return isValid;
     }
 
-    public static boolean verification(ArrayList<Account> accounts, int agency)
+    public static String withdrawAndDeposit(ArrayList<Account> accounts, int option, Double value, int agency)
     {
-        boolean isValid = false;
-        for (Account user : accounts) {
-            if (user.getAgency() == agency) {
-                isValid = true;
+        String message = "";
+        if (option == 2) {
+            for (Account user : accounts) {
+                if (user.getAgency() == agency && value > 0) {
+                    user.deposit(value);
+                    message = "Operação realizada com sucesso!";
+                } else {
+                    message = "Não foi possível realizar a operação";
+                }
+            }
+        } else {
+            for (Account user : accounts) {
+                if (user.getAgency() == agency && value <= user.getFunds()) {
+                    user.withdraw(value);
+                    message = "Operação realizada com sucesso!";
+                } else {
+                    message = "Não foi possível realizar a operação";
+                }
             }
         }
-        return isValid;
+        return message;
     }
 }
+
+
 
 
