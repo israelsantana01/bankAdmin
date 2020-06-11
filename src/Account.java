@@ -47,6 +47,7 @@ public class Account {
     {
         this.funds -= value;
     }
+
     public void deposit(Double value)
     {
         this.funds += value;
