@@ -1,9 +1,12 @@
+package src;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Main {
 
-    public static void main(String[] args)
+public class Main {
+   
+        public static void main(String[] args)
     {
         Scanner nameInput = new Scanner(System.in);
         Scanner valueInput = new Scanner(System.in);
@@ -150,8 +153,5 @@ public class Main {
         }
         return message;
     }
+  
 }
-
-
-
-

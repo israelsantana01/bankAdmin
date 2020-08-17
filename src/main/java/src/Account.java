@@ -1,3 +1,5 @@
+package src;
+
 public class Account {
     private int agency;
     private String owner;
@@ -65,3 +67,4 @@ public class Account {
                 '}';
     }
 }
+
